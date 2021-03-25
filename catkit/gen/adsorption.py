@@ -586,7 +586,7 @@ class Builder(AdsorptionSites):
                         bond=bonds[0],
                         site_index=i,
                         auto_construct=auto_construct,
-                        symmetric=False
+                        symmetric=False,
                         **kwargs)]
             elif isinstance(index, (list, np.ndarray)):
                 slab = []
