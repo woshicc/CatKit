@@ -561,6 +561,71 @@ class Builder(AdsorptionSites):
             raise ValueError('Only mono- and bidentate adsorption supported.')
 
         return slab
+    
+    def add_adsorbates_periodic(
+            self,
+            adsorbate,
+            bonds=None,
+            index=0,
+            auto_construct=True,
+            **kwargs):
+
+        if bonds is None:
+            # Molecules with tag -1 are designated to bond
+            bonds = np.where(adsorbate.get_tags() == -1)[0]
+
+        if len(bonds) == 0:
+            raise ValueError('Specify the index of atom to bond.')
+
+        elif len(bonds) == 1:
+            if index is -1:
+                slab = []
+                for i, _ in enumerate(self.get_periodic_sites()):
+                    slab += [self._single_adsorption(
+                        adsorbate,
+                        bond=bonds[0],
+                        site_index=i,
+                        auto_construct=auto_construct,
+                        symmetric=False
+                        **kwargs)]
+            elif isinstance(index, (list, np.ndarray)):
+                slab = []
+                for i in index:
+                    slab += [self._single_adsorption(
+                        adsorbate,
+                        bond=bonds[0],
+                        site_index=i,
+                        auto_construct=auto_construct,
+                        **kwargs)]
+            else:
+                slab = self._single_adsorption(
+                    adsorbate,
+                    bond=bonds[0],
+                    site_index=index,
+                    auto_construct=auto_construct,
+                    **kwargs)
+
+        elif len(bonds) == 2:
+            if index == -1:
+                slab = []
+                edges = self.get_adsorption_edges()
+                for i, _ in enumerate(edges):
+                    slab += [self._double_adsorption(
+                        adsorbate,
+                        bonds=bonds,
+                        edge_index=i,
+                        **kwargs)]
+            else:
+                slab = self._double_adsorption(
+                    adsorbate,
+                    bonds=bonds,
+                    edge_index=index,
+                    **kwargs)
+
+        else:
+            raise ValueError('Only mono- and bidentate adsorption supported.')
+
+        return slab
 
     def _single_adsorption(
             self,
