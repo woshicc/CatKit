@@ -91,6 +91,7 @@ def surface(
         layer_type=kwargs.get('layer_type', 'trim'),
         attach_graph=kwargs.get('attach_graph', True),
         standardize_bulk=kwargs.get('standardize_bulk', True),
+        primitive=kwargs.get('primitive', True),
         tol=kwargs.get('tol', 1e-8)
     )
 
