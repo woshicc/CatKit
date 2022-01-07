@@ -272,5 +272,8 @@ def _branch_molecule(
     basis[:, 0] *= dist * np.cos(ang)
 
     positions = vectors + root_position - basis[:, 0]
-
+    
+    for i in range(len(nodes)):
+            atoms[nodes[i]].position = positions[i]
+    
     return positions
